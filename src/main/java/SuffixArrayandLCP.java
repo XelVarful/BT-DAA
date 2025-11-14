@@ -8,7 +8,7 @@ public class SuffixArrayandLCP {
     // Helper class for the suffix array construction
     static class Suffix {
         int index; // Original starting index of the suffix
-        int[] rank; // Rank[0] for length k, Rank[1] for length 2k
+        int[] rank; // Rank[0] for length k Rank[1] for length 2k
 
         public Suffix(int index) {
             this.index = index;
@@ -16,22 +16,21 @@ public class SuffixArrayandLCP {
         }
     }
 
-    /**
-     * Part 1: Builds the Suffix Array (SA) in O(n log n).
-     * Uses the doubling-of-comparison-length technique.
-     */
+    ///Part 1: Builds the Suffix Array (SA) in O(n log n).
+     ///Uses the doubling-of-comparison-length technique.
+
     private static int[] buildSuffixArray(String text) {
         int n = text.length();
         Suffix[] suffixes = new Suffix[n];
 
-        // 1. Initial ranking based on the first two characters (k=1)
+        // 1Initial ranking based on the first two characters (k=1)
         for (int i = 0; i < n; i++) {
             suffixes[i] = new Suffix(i);
             suffixes[i].rank[0] = text.charAt(i);
             suffixes[i].rank[1] = ((i + 1) < n) ? (text.charAt(i + 1)) : -1; // -1 for boundary
         }
 
-        // 2. Initial Sort (k=1)
+        // 2 Initial Sort (k=1)
         Arrays.sort(suffixes, new Comparator<Suffix>() {
             @Override
             public int compare(Suffix a, Suffix b) {
@@ -42,7 +41,7 @@ public class SuffixArrayandLCP {
             }
         });
 
-        // 3. Iterative Sorting and Ranking (Doubling phase)
+        // 3 Iterative Sorting and Ranking (Doubling phase)
         int[] index = new int[n]; // Maps original index to its current position in 'suffixes'
 
         // k will double in each iteration (4, 8, 16, ...)
@@ -96,23 +95,22 @@ public class SuffixArrayandLCP {
         return suffixArr;
     }
 
-    /**
-     * Part 2: Builds the LCP (Longest Common Prefix) array using Kasai's Algorithm in O(n).
-     * LCP[i] stores LCP between SA[i-1] and SA[i].
-     */
+    ///Part 2: Builds the LCP (Longest Common Prefix) array using Kasai's Algorithm in O(n).
+    ///LCP[i] stores LCP between SA[i-1] and SA[i].
+
     private static int[] buildLCPArray(String text, int[] sa) {
         int n = text.length();
         int[] lcp = new int[n];
         int[] rank = new int[n]; // The inverse of SA: rank[i] is the position of suffix i in SA
 
-        // 1. Compute the Rank Array
+        // 1 Compute the Rank Array
         for (int i = 0; i < n; i++) {
             rank[sa[i]] = i;
         }
 
-        int k = 0; // The length of the LCP for the current pair
+        int k = 0; //The length of the LCP for the current pair
 
-        // 2. Kasai's algorithm core loop
+        // 2Kasai's algorithm core loop
         // Iterate through suffixes in their original order (i = 0 to n-1)
         for (int i = 0; i < n; i++) {
             if (rank[i] == n - 1) {
@@ -141,21 +139,20 @@ public class SuffixArrayandLCP {
     }
 
 
-    /**
-     * Main method to run the combined Suffix Array and LCP construction and test cases.
-     */
+     ///Main method to run the combined Suffix Array and LCP construction and test cases.
+
     public static void main(String[] args) {
         System.out.println("--- Suffix Array & LCP (Kasai's Algorithm) Implementation ---");
 
-        // --- Test Case 1: Short String (n=5) ---
+        /// Test1-Short String (n=5)
         String text1 = "ababa";
         runSA_LCP(text1, "Test 1: Short String (ababa)");
 
-        // --- Test Case 2: Medium-Length String (n=11) ---
+        /// --- Test2-Medium-Length String (n=11)
         String text2 = "mississippi";
         runSA_LCP(text2, "Test 2: Medium String (mississippi)");
 
-        // --- Test Case 3: Longer String (n=24) ---
+        /// Test3-Longer String (n=24)
         String text3 = "GCGTATGCGTGTATGCGTGCGTAT";
         runSA_LCP(text3, "Test 3: Longer String (DNA sequence example)");
     }
