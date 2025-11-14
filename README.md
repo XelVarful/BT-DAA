@@ -2,108 +2,53 @@
 
 ## 1. Project Overview
 
-This project implements two fundamental algorithms in string processing: the Suffix Array (SA) and the Longest Common Prefix (LCP) Array. The goal was to achieve optimal time complexity for both components: $O(n \log n)$ for the SA and $O(n)$ for the LCP array.
+This project implements two fundamental algorithms in string processing: the Suffix Array (SA) and the Longest Common Prefix (LCP) Array. The primary objective was to achieve the optimal time complexity for these structures: $O(n \log n)$ for the SA construction and $O(n)$ for the LCP array construction.
 
-The final implementation is contained within the SuffixArrayandLCP.java class.
+The entire implementation is housed within the single Java class: SuffixArrayandLCP.java.
 
 ## 2. Implementation Details
 
-### 2.1 Suffix Array Construction (SA)
+### 2.1 Suffix Array Construction (buildSuffixArray)
 
-The Suffix Array construction uses the doubling-of-comparison-length method, often referenced as a variation of the D-S algorithm.
+The SA construction utilizes an $O(n \log n)$ approach based on the doubling-of-comparison-length technique.
 
-Approach: The suffixes are iteratively sorted based on $k$-length prefixes. In each step, the comparison length $k$ is doubled (from 1 to 2, 4, 8, etc.).
+Approach: Suffixes are iteratively sorted by considering prefixes of length $k$, where $k$ is doubled in each step ($k = 1, 2, 4, 8, \dots$). The Suffix helper class manages the two ranking components: rank[0] (rank of the current half) and rank[1] (rank of the subsequent half).
 
-Time Complexity: The overall time complexity is $O(n \log n)$, as there are $\log n$ sorting iterations, and each sort takes linear time $O(n)$ if implemented efficiently (using counting sort), or $O(n \log n)$ if using standard comparison sorting (which is sufficient here for demonstration).
+Time Complexity: The $O(n \log n)$ bound is achieved due to $\log n$ passes of sorting.
 
-### 2.2 LCP Array Construction (Kasai's Algorithm)
+### 2.2 LCP Array Construction (buildLCPArray)
 
-The LCP Array, where $LCP[i]$ is the length of the longest common prefix between $SA[i-1]$ and $SA[i]$, is built using Kasai's linear-time algorithm.
+The LCP Array, which stores the length of the longest common prefix between $SA[i-1]$ and $SA[i]$, is built using Kasai's linear-time algorithm.
 
-Optimization: This algorithm relies on the fact that if a suffix $S[i]$ has an LCP of length $k$ with the preceding suffix in the array, then the suffix $S[i+1]$ will have an LCP of at least $k-1$ with its predecessor. This property allows for character comparisons to be amortized, resulting in a highly efficient, single-pass $O(n)$ calculation.
+Data Structures: The buildLCPArray method first computes the Rank Array (rank), which serves as the inverse of the SA. This allows for $O(1)$ lookups to find the predecessor of any suffix $S[i]$ in the sorted array.
 
-Required Data Structure: The algorithm first computes the Rank Array (the inverse of the SA) to quickly find the predecessor of any given suffix.
+Optimization (Key Property): The algorithm exploits the property that the LCP of suffix $S[i+1]$ with its predecessor is at least $\text{LCP}(S[i], \text{pred}) - 1$. This crucial optimization ensures that the total number of character comparisons is limited to $2n$, yielding an overall $O(n)$ time complexity.
 
 ## 3. Complexity Analysis
 
-The combined algorithm complexity is dominated by the Suffix Array construction.
+The complexity of the solution is dominated by the initial Suffix Array construction, yielding an overall complexity of $O(n \log n)$.
 
-Component
-
-Algorithm Used
-
-Time Complexity
-
-Space Complexity
-
-Suffix Array (SA)
-
-Doubling/Inductive Sorting
-
-$O(n \log n)$
-
-$O(n)$
-
-LCP Array (LCP)
-
-Kasai's Algorithm
-
-$O(n)$
-
-$O(n)$
-
-Overall
-
-SA + LCP
-
-$O(n \log n)$
-
-$O(n)$
+| Component | Algorithm Used | Time Complexity | Space Complexity | 
+| :--- | :--- | :--- | :--- | 
+| **Suffix Array (SA)** | Doubling/Inductive Sorting | $O(n \log n)$ | $O(n)$ | 
+| **LCP Array (LCP)** | Kasai's Algorithm | $O(n)$ | $O(n)$ | 
+| **Overall** | SA + LCP | $O(n \log n)$ | $O(n)$ |
 
 ## 4. Testing and Results
 
-The implemented code was tested using the main method within the class, which executes three distinct test cases to verify correctness across different string characteristics.
+The solution's correctness was verified by running the main method with three diverse test cases. The output format includes the final SA and LCP arrays, along with a detailed table showing the sorted suffixes and their corresponding LCP lengths.
 
-Test Case
-
-String
-
-Length (n)
-
-Characteristics
-
-Test 1
-
-ababa
-
-5
-
-Simple, repetitive pattern.
-
-Test 2
-
-mississippi
-
-11
-
-Classic test case with repeated characters.
-
-Test 3
-
-GCGTATGCGTGTATGCGTGCGTAT
-
-24
-
-Longer sequence, simulating biological data (e.g., DNA).
-
-The output for each test case displays the string, the computed Suffix Array (SA), the LCP Array (LCP), and a clean table showing the sorted suffixes along with their LCP values.
-
+| Test Case | String | Length (`n`) | Characteristics | 
+| :--- | :--- | :--- | :--- | 
+| **Test 1** | `"ababa"` | 5 | Simple, repetitive pattern. | 
+| **Test 2** | `"mississippi"` | 11 | Classic test case with repeated characters. | 
+| **Test 3** | `"GCGTATGCGTGTATGCGTGCGTAT"` | 24 | Longer sequence, simulating biological data. |
 ## 5. Execution
 
-The project is structured as a single Java file (SuffixArrayandLCP.java).
+The project is structured as a single, self-contained Java file.
 
-Compile: Compile the file using a standard Java compiler (e.g., javac SuffixArrayandLCP.java).
+Compile: Use the Java compiler: ``javac SuffixArrayandLCP.java``
 
-Run: Execute the compiled class (e.g., java SuffixArrayandLCP).
+Run: Execute the compiled class: ``java SuffixArrayandLCP``
 
-The test results will be printed directly to the console.
+All test results are printed directly to the standard output ``System.out``
